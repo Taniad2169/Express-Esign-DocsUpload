@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Express Capital Associates - Application Form</title>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: Arial, sans-serif; background-color: #f0f4f2; margin: 0; padding: 0; }
+
+  /* Header */
+  .header-banner { background-color: #146634; color: white; }
+
+  /* Field styling */
+  .field-box { 
+    background-color: #cae0d3; 
+    color: #146634; 
+    font-weight: bold; 
+    padding: 0.5rem; 
+    border: 2px solid #146634; 
+    border-radius: 6px; 
+    width: 100%; 
+    font-size: 1rem; 
+  }
+
+  .hidden { display: none; }
+
+  /* Signature Pad */
+  .signature-pad { border: 2px solid #146634; border-radius: 8px; }
+
+  /* Animated emoji */
+  .emoji-bounce {
+    display: inline-block;
+    animation: bounce 1s infinite alternate;
+    font-size: 1.5rem;
+  }
+  @keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-10px); }
+  }
+
+  /* Outer form border */
+  .form-container {
+    border: 4px solid #146634;
+    border-radius: 12px;
+    padding: 1.5rem;
+    background-color: white;
+    max-width: 700px;
+    margin: 2rem auto;
+  }
+</style>
+</head>
+<body>
+
+<div class="form-container">
+  <!-- Header -->
+  <div class="header-banner p-6 text-center rounded-lg mb-6">
+    <h1 class="text-3xl font-bold">Express Capital Associates</h1>
+    <p class="text-lg mt-2">Soaring Above the Competition</p>
+  </div>
+
+  <!-- Form -->
+  <form id="applicationForm" class="space-y-4" action="https://formspree.io/f/xnnbydaw" method="POST" enctype="multipart/form-data" target="_blank">
+
+    <!-- Basic Info -->
+    <div class="space-y-2">
+      <input type="text" name="fullName" placeholder="Full Name" class="field-box resize-y" required>
+      <input type="text" name="companyName" placeholder="Company Name" class="field-box resize-y" required>
+      <input type="tel" name="phoneNumber" placeholder="Phone Number" class="field-box resize-y" required>
+    </div>
+
+    <!-- Document Uploads -->
+    <div class="space-y-2">
+      <label class="flex items-center space-x-2">
+        <input type="checkbox" class="doc-checkbox">
+        Copy of Driver's License
+      </label>
+      <input type="file" name="driverLicense" class="hidden doc-upload" multiple>
+
+      <label class="flex items-center space-x-2">
+        <input type="checkbox" class="doc-checkbox">
+        Most Recent 4 Months Bank Statements
+      </label>
+      <input type="file" name="bankStatements" class="hidden doc-upload" multiple>
+
+      <label class="flex items-center space-x-2">
+        <input type="checkbox" class="doc-checkbox">
+        Voided Check
+      </label>
+      <input type="file" name="voidedCheck" class="hidden doc-upload" multiple>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="hidden" id="disclaimerSection">
+      <div class="mb-1 emoji-bounce text-center">👇</div>
+      <label class="flex items-start space-x-2">
+        <input type="checkbox" id="disclaimerCheck" name="disclaimer" value="acknowledged">
+        <span>I acknowledge I have read and understood the terms and conditions of the application</span>
+      </label>
+      <p class="text-sm mt-2">
+        By signing above, each of the above listed business and business owner/officer (individually and collectively, "you") authorize Express Capital Network Associates and its agents, banks or financial institutions to obtain an investigative or consumer report from a credit bureau or a credit agency and to investigate the references given on any other statements or data obtained from applicant. You also authorize Express Capital Network Associates to transmit this application form, with any of the foregoing information obtained in connection with this application, to any or all of the Recipients for the foregoing purposes. You also consent to the release, by any creditor or financial institution, of any information relating to any of you, to Express Capital Network Associates and to each of the Recipients, on its own behalf. I am providing my business cell-phone and business e-mail address and hereby consent to the receipt of correspondence/messages regarding transactions with Express Capital Network Associates and/or its affiliates on either medium. I certify that all the information contained herein is complete, true and accurate. Express Capital Network Associate is not a lender or a bank. We do not provide loans or make credit decisions. Our service connects businesses like yours with a network of trusted third-party funding providers who offer Merchant Cash Advances (MCAs) and other commercial financing products. A Merchant Cash Advance (MCA) is a purchase of future receivables, not a loan. It is not subject to the same regulatory requirements as traditional loans and may have different terms and conditions. Please be aware that MCAs may involve higher costs compared to traditional financing options. All funding offers are subject to the individual provider's underwriting and approval processes. Express Capital Network Associate may receive a referral fee or commission if your business is funded through one of our partners. We strongly advise you to consult with a qualified financial advisor to determine if an MCA or any other financing product is suitable for your specific business needs. By submitting this application, you agree to be contacted by phone, SMS, or email regarding commercial financing products, in accordance with our Privacy Policy.
+      </p>
+    </div>
+
+    <!-- Signature Pad -->
+    <div class="hidden" id="signatureSection">
+      <p class="mb-2 font-semibold">Sign Below:</p>
+      <input type="hidden" name="signature" id="signatureInput">
+      <canvas id="signaturePad" class="signature-pad w-full h-40 mb-2"></canvas>
+      <button type="button" id="clearSignature" class="bg-red-600 text-white px-4 py-1 rounded">Clear</button>
+    </div>
+
+    <!-- Submit -->
+    <button type="submit" class="bg-green-700 text-white px-4 py-2 rounded mt-4 w-full">Submit Application</button>
+  </form>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white p-6 rounded-lg max-w-md text-center">
+    <p class="mb-4">Please check the disclaimer box before signing.</p>
+    <button id="closeModal" class="bg-green-700 text-white px-4 py-2 rounded">OK</button>
+  </div>
+</div>
+
+<script>
+  const canvas = document.getElementById('signaturePad');
+  const signatureInput = document.getElementById('signatureInput');
+  const clearBtn = document.getElementById('clearSignature');
+  const disclaimerCheck = document.getElementById('disclaimerCheck');
+  const modal = document.getElementById('modal');
+  const closeModal = document.getElementById('closeModal');
+  const docCheckboxes = document.querySelectorAll('.doc-checkbox');
+  const docUploads = document.querySelectorAll('.doc-upload');
+  const disclaimerSection = document.getElementById('disclaimerSection');
+  const signatureSection = document.getElementById('signatureSection');
+
+  let signaturePad;
+
+  function initSignaturePad() {
+    if (!signaturePad) {
+      signaturePad = new SignaturePad(canvas, { backgroundColor: 'rgba(255,255,255,0)' });
+      clearBtn.addEventListener('click', () => signaturePad.clear());
+      resizeCanvas();
+    }
+  }
+
+  function resizeCanvas() {
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    canvas.width = canvas.offsetWidth * ratio;
+    canvas.height = canvas.offsetHeight * ratio;
+    canvas.getContext('2d').scale(ratio, ratio);
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+
+  // Show disclaimer and signature when all documents checked
+  docCheckboxes.forEach((checkbox, i) => {
+    checkbox.addEventListener('change', () => {
+      docUploads[i].classList.toggle('hidden', !checkbox.checked);
+      const allDocsChecked = [...docCheckboxes].every(cb => cb.checked);
+      if (allDocsChecked) {
+        disclaimerSection.classList.remove('hidden');
+        signatureSection.classList.remove('hidden');
+        initSignaturePad();
+      } else {
+        disclaimerSection.classList.add('hidden');
+        signatureSection.classList.add('hidden');
+      }
+    });
+  });
+
+  canvas.addEventListener('mousedown', () => {
+    if (!disclaimerCheck.checked) {
+      modal.classList.remove('hidden');
+    }
+  });
+
+  closeModal.addEventListener('click', () => modal.classList.add('hidden'));
+
+  // Form submission
+  document.getElementById('applicationForm').addEventListener('submit', (e) => {
+    if (!disclaimerCheck.checked) {
+      e.preventDefault();
+      alert('Please acknowledge the disclaimer before submitting.');
+      return;
+    }
+    if (signaturePad && !signaturePad.isEmpty()) {
+      signatureInput.value = signaturePad.toDataURL();
+    } else {
+      e.preventDefault();
+      alert('Please sign before submitting.');
+    }
+  });
+</script>
+
+</body>
+</html>
