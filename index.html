@@ -7,6 +7,9 @@
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
+  html {
+    scroll-behavior: smooth;
+  }
   body { font-family: Arial, sans-serif; background-color: #f0f4f2; margin: 0; padding: 0; }
 
   /* Header */
@@ -117,19 +120,12 @@
     gap: 1rem;
   }
 
-  /* Custom styling for the SSN input to match the image */
-  input[name="ssn_owner"], input[name="ssn_partner"] {
-    -webkit-text-security: disc;
-  }
-  input[name="ssn_owner"]::-webkit-input-placeholder, input[name="ssn_partner"]::-webkit-input-placeholder {
-    -webkit-text-security: none;
-  }
-
 </style>
 </head>
 <body>
 
 <div class="form-container">
+  <!-- Header -->
   <div class="header-banner p-6 text-center rounded-lg mb-6">
     <h1 class="text-3xl font-bold">EXPRESS CAPITAL NETWORK ASSOCIATES</h1>
     <p class="text-lg mt-2">Soaring Above the Competition</p>
@@ -137,6 +133,7 @@
 
   <form id="applicationForm" class="space-y-6" action="https://formspree.io/f/xnnbydaw" method="POST" enctype="multipart/form-data" target="_blank">
 
+    <!-- Business Information -->
     <div>
       <h2 class="section-title">BUSINESS INFORMATION</h2>
       <div class="form-grid">
@@ -222,17 +219,13 @@
             <option value="Other (Please specify)">Other (Please specify)</option>
           </select>
         </div>
-        <div class="full-width">
-          <label for="businessDescription" class="font-bold text-[#146634]">Business Description:</label>
-          <textarea id="businessDescription" name="businessDescription" class="field-box auto-resize" placeholder="Describe your business in a few sentences." required></textarea>
-        </div>
         <div>
-          <label for="monthlyGrossIncome" class="font-bold text-[#146634]">Monthly Gross Income (Avg.):</label>
-          <input type="number" id="monthlyGrossIncome" name="monthlyGrossIncome" class="field-box" placeholder="$" required>
+          <label for="monthlyGrossRevenue" class="font-bold text-[#146634]">Monthly Gross Revenue (Avg.):</label>
+          <input type="text" id="monthlyGrossRevenue" name="monthlyGrossRevenue" class="field-box" placeholder="$" required>
         </div>
         <div>
           <label for="fundingAmountRequest" class="font-bold text-[#146634]">Funding Amount Request:</label>
-          <input type="number" id="fundingAmountRequest" name="fundingAmountRequest" class="field-box" placeholder="$" required>
+          <input type="text" id="fundingAmountRequest" name="fundingAmountRequest" class="field-box" placeholder="$" required>
         </div>
         <div>
           <label for="fundingReason" class="font-bold text-[#146634]">Primary reason for seeking funding:</label>
@@ -258,6 +251,7 @@
       </div>
     </div>
 
+    <!-- Merchant/Owner Information -->
     <div>
       <h2 class="section-title">MERCHANT/OWNER INFORMATION</h2>
       <div class="form-grid">
@@ -294,7 +288,7 @@
         </div>
         <div>
           <label for="ownerSSN" class="font-bold text-[#146634]">Social Security Number (SSN):</label>
-          <input type="text" id="ownerSSN" name="ownerSSN" class="field-box" placeholder="XXX-XX-XXXX" pattern="\d{3}-\d{2}-\d{4}" required>
+          <input type="text" id="ownerSSN" name="ownerSSN" class="field-box" placeholder="123456789" required>
         </div>
         <div>
           <label for="ownerDateOfBirth" class="font-bold text-[#146634]">Date of Birth:</label>
@@ -302,13 +296,7 @@
         </div>
         <div>
           <label for="ownerFicoScore" class="font-bold text-[#146634]">FICO Score:</label>
-          <select id="ownerFicoScore" name="ownerFicoScore" class="field-box" required>
-            <option value="">Select...</option>
-            <option value="300-500">300-500</option>
-            <option value="501-600">501-600</option>
-            <option value="601-700">601-700</option>
-            <option value="701-850">701-850</option>
-          </select>
+          <input type="text" id="ownerFicoScore" name="ownerFicoScore" class="field-box" placeholder="Enter Score" required>
         </div>
         <div>
           <label for="ownerCellNumber" class="font-bold text-[#146634]">Cell Number:</label>
@@ -317,6 +305,7 @@
       </div>
     </div>
 
+    <!-- Partner Information -->
     <div id="partnerSection">
       <h2 class="section-title">PARTNER INFORMATION</h2>
       <p class="text-sm italic text-center">Please provide information for all owners with 20% or more ownership.</p>
@@ -354,7 +343,7 @@
         </div>
         <div>
           <label for="partnerSSN" class="font-bold text-[#146634]">Social Security Number (SSN):</label>
-          <input type="text" id="partnerSSN" name="partnerSSN" class="field-box" placeholder="XXX-XX-XXXX" pattern="\d{3}-\d{2}-\d{4}">
+          <input type="text" id="partnerSSN" name="partnerSSN" class="field-box" placeholder="123456789">
         </div>
         <div>
           <label for="partnerDateOfBirth" class="font-bold text-[#146634]">Date of Birth:</label>
@@ -362,13 +351,7 @@
         </div>
         <div>
           <label for="partnerFicoScore" class="font-bold text-[#146634]">FICO Score:</label>
-          <select id="partnerFicoScore" name="partnerFicoScore" class="field-box">
-            <option value="">Select...</option>
-            <option value="300-500">300-500</option>
-            <option value="501-600">501-600</option>
-            <option value="601-700">601-700</option>
-            <option value="701-850">701-850</option>
-          </select>
+          <input type="text" id="partnerFicoScore" name="partnerFicoScore" class="field-box" placeholder="Enter Score">
         </div>
         <div>
           <label for="partnerCellNumber" class="font-bold text-[#146634]">Cell Number:</label>
@@ -377,6 +360,7 @@
       </div>
     </div>
 
+    <!-- Document Uploads -->
     <div class="space-y-2">
       <h2 class="section-title">DOCUMENT UPLOADS</h2>
       <label class="flex items-center space-x-2">
@@ -398,6 +382,7 @@
       <input type="file" name="voidedCheck" class="hidden doc-upload" multiple>
     </div>
 
+    <!-- Disclaimer -->
     <div class="hidden" id="disclaimerSection">
       <div class="mb-1 emoji-bounce text-center">👇</div>
       <label class="flex items-start space-x-2">
@@ -409,6 +394,7 @@
       </p>
     </div>
 
+    <!-- Signature Pad -->
     <div class="hidden" id="signatureSection">
       <div class="mb-1 emoji-bounce text-center">🎯</div>
       <p class="mb-2 font-semibold">Sign Below:</p>
@@ -417,6 +403,7 @@
       <button type="button" id="clearSignature" class="bg-red-600 text-white px-4 py-1 rounded">Clear</button>
     </div>
 
+    <!-- Submit and Print Buttons -->
     <div class="button-container">
       <button type="submit" class="submit-button">Submit Application</button>
       <button type="button" onclick="window.print()" class="print-button">Print Application</button>
@@ -424,6 +411,7 @@
   </form>
 </div>
 
+<!-- Modal -->
 <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white p-6 rounded-lg max-w-md text-center">
     <p class="mb-4">Please check the box before signing to acknowledge you have read the terms and conditions.</p>
@@ -442,7 +430,6 @@
   const docUploads = document.querySelectorAll('.doc-upload');
   const disclaimerSection = document.getElementById('disclaimerSection');
   const signatureSection = document.getElementById('signatureSection');
-  const autoResizeTextarea = document.getElementById('businessDescription');
 
   let signaturePad;
 
@@ -462,14 +449,6 @@
   }
 
   window.addEventListener('resize', resizeCanvas);
-
-  // Auto-resize function for the textarea
-  if (autoResizeTextarea) {
-    autoResizeTextarea.addEventListener('input', function() {
-      this.style.height = 'auto';
-      this.style.height = this.scrollHeight + 'px';
-    });
-  }
 
   // Show disclaimer and signature when all documents checked
   docCheckboxes.forEach((checkbox, i) => {
@@ -497,6 +476,8 @@
   disclaimerCheck.addEventListener('change', () => {
     if (disclaimerCheck.checked) {
       initSignaturePad();
+      // Scroll smoothly to the signature section
+      signatureSection.scrollIntoView({ behavior: 'smooth' });
     }
   });
 
@@ -506,14 +487,18 @@
   document.getElementById('applicationForm').addEventListener('submit', (e) => {
     if (!disclaimerCheck.checked) {
       e.preventDefault();
-      alert('Please acknowledge the disclaimer before submitting.');
+      // Using a simple modal instead of alert
+      modal.querySelector('p').textContent = 'Please acknowledge the disclaimer before submitting.';
+      modal.classList.remove('hidden');
       return;
     }
     if (signaturePad && !signaturePad.isEmpty()) {
       // No base64 conversion, simply check for signature presence
     } else {
       e.preventDefault();
-      alert('Please sign before submitting.');
+      // Using a simple modal instead of alert
+      modal.querySelector('p').textContent = 'Please sign before submitting.';
+      modal.classList.remove('hidden');
     }
   });
 
