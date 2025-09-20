@@ -216,6 +216,10 @@
             <label><input type="radio" name="hasWebsite" value="No">No</label>
           </div>
         </div>
+        <div class="full-width hidden" id="websiteUrlField">
+          <label for="websiteUrl" class="font-bold text-[#146634]">Website URL:</label>
+          <input type="url" id="websiteUrl" name="websiteUrl" class="field-box" placeholder="https://www." required>
+        </div>
         <div class="full-width">
           <label for="emailAddress" class="font-bold text-[#146634]">Email Address:</label>
           <input type="email" id="emailAddress" name="emailAddress" class="field-box" required>
@@ -253,16 +257,16 @@
           </select>
         </div>
         <div class="full-width">
-          <label for="businessDescription" class="font-bold text-[#146634]">Business Description:</label>
-          <textarea id="businessDescription" name="businessDescription" class="field-box auto-resize" placeholder="Describe your business in a few sentences." required></textarea>
+          <label for="additionalNotes" class="font-bold text-[#146634]">Additional Notes:</label>
+          <textarea id="additionalNotes" name="additionalNotes" class="field-box auto-resize" placeholder="Please add any additional information or comments here."></textarea>
         </div>
         <div>
-          <label for="monthlyGrossIncome" class="font-bold text-[#146634]">Monthly Gross Income (Avg.):</label>
-          <input type="number" id="monthlyGrossIncome" name="monthlyGrossIncome" class="field-box" placeholder="$" required>
+          <label for="monthlyGrossRevenue" class="font-bold text-[#146634]">Monthly Gross Revenue (Avg.):</label>
+          <input type="text" id="monthlyGrossRevenue" name="monthlyGrossRevenue" class="field-box" placeholder="$" required>
         </div>
         <div>
           <label for="fundingAmountRequest" class="font-bold text-[#146634]">Funding Amount Request:</label>
-          <input type="number" id="fundingAmountRequest" name="fundingAmountRequest" class="field-box" placeholder="$" required>
+          <input type="text" id="fundingAmountRequest" name="fundingAmountRequest" class="field-box" placeholder="$" required>
         </div>
         <div>
           <label for="fundingReason" class="font-bold text-[#146634]">Primary reason for seeking funding:</label>
@@ -479,7 +483,9 @@
   const docUploads = document.querySelectorAll('.doc-upload');
   const disclaimerSection = document.getElementById('disclaimerSection');
   const signatureSection = document.getElementById('signatureSection');
-  const autoResizeTextarea = document.getElementById('businessDescription');
+  const hasWebsiteRadios = document.querySelectorAll('input[name="hasWebsite"]');
+  const websiteUrlField = document.getElementById('websiteUrlField');
+  const autoResizeTextarea = document.getElementById('additionalNotes');
 
   let signaturePad;
 
@@ -516,9 +522,21 @@
       if (allDocsChecked) {
         disclaimerSection.classList.remove('hidden');
         signatureSection.classList.remove('hidden');
+        initSignaturePad();
       } else {
         disclaimerSection.classList.add('hidden');
         signatureSection.classList.add('hidden');
+      }
+    });
+  });
+
+  // Handle website URL field visibility
+  hasWebsiteRadios.forEach(radio => {
+    radio.addEventListener('change', (event) => {
+      if (event.target.value === 'Yes') {
+        websiteUrlField.classList.remove('hidden');
+      } else {
+        websiteUrlField.classList.add('hidden');
       }
     });
   });
@@ -534,6 +552,8 @@
   disclaimerCheck.addEventListener('change', () => {
     if (disclaimerCheck.checked) {
       initSignaturePad();
+      // Scroll smoothly to the signature section
+      signatureSection.scrollIntoView({ behavior: 'smooth' });
     }
   });
 
@@ -543,14 +563,18 @@
   document.getElementById('applicationForm').addEventListener('submit', (e) => {
     if (!disclaimerCheck.checked) {
       e.preventDefault();
-      alert('Please acknowledge the disclaimer before submitting.');
+      // Using a simple modal instead of alert
+      modal.querySelector('p').textContent = 'Please acknowledge the disclaimer before submitting.';
+      modal.classList.remove('hidden');
       return;
     }
     if (signaturePad && !signaturePad.isEmpty()) {
       // No base64 conversion, simply check for signature presence
     } else {
       e.preventDefault();
-      alert('Please sign before submitting.');
+      // Using a simple modal instead of alert
+      modal.querySelector('p').textContent = 'Please sign before submitting.';
+      modal.classList.remove('hidden');
     }
   });
 
@@ -572,7 +596,6 @@
 
   ownerPercentageInput.addEventListener('input', updatePartnerRequired);
   updatePartnerRequired(); // Initial check on page load
-
 </script>
 
 </body>
